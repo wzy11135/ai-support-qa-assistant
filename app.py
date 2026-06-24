@@ -8,21 +8,22 @@ from qa.evaluator import run_evaluation
 from qa.quality_checker import check_quality
 from rag.generator import answer_question
 from rag.loader import load_documents
-from rag.retriever import LocalVectorStore
 from rag.splitter import split_documents
+from rag.store_factory import build_retriever
 
 
 st.set_page_config(page_title="AI Support QA Assistant", page_icon="AI", layout="wide")
 
 
 @st.cache_resource
-def build_vector_store() -> tuple[LocalVectorStore, int, int]:
+def build_vector_store():
     documents = load_documents(KNOWLEDGE_BASE_DIR)
     chunks = split_documents(documents)
-    return LocalVectorStore(chunks), len(documents), len(chunks)
+    vector_store, backend_name = build_retriever(chunks)
+    return vector_store, len(documents), len(chunks), backend_name
 
 
-vector_store, doc_count, chunk_count = build_vector_store()
+vector_store, doc_count, chunk_count, backend_name = build_vector_store()
 
 st.title("AI Support QA Assistant")
 st.caption("基于知识库检索、引用溯源、客服质检和自动评估的 AI 工程项目")
@@ -30,7 +31,7 @@ st.caption("基于知识库检索、引用溯源、客服质检和自动评估�
 metric_cols = st.columns(3)
 metric_cols[0].metric("知识库文档", doc_count)
 metric_cols[1].metric("检索片段", chunk_count)
-metric_cols[2].metric("运行模式", "API / 本地兜底")
+metric_cols[2].metric("检索后端", backend_name)
 
 tab_qa, tab_quality, tab_eval, tab_docs = st.tabs(["知识库问答", "客服质检", "评估报告", "知识库"])
 
