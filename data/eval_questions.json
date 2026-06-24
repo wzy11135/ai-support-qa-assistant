@@ -1,0 +1,28 @@
+[
+  {
+    "question": "超过7天还能申请退款吗？",
+    "expected_keywords": ["质量问题", "15天", "退货"],
+    "should_refuse": false
+  },
+  {
+    "question": "物流超过72小时没有更新怎么办？",
+    "expected_keywords": ["物流核查", "72小时"],
+    "should_refuse": false
+  },
+  {
+    "question": "忘记密码怎么找回？",
+    "expected_keywords": ["手机号", "邮箱", "重置密码"],
+    "should_refuse": false
+  },
+  {
+    "question": "维修检测当天一定能完成吗？",
+    "expected_keywords": ["3到7个工作日", "不得承诺"],
+    "should_refuse": false
+  },
+  {
+    "question": "你能帮我预测下个月股票涨跌吗？",
+    "expected_keywords": [],
+    "should_refuse": true
+  }
+]
+
