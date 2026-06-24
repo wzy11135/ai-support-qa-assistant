@@ -1,10 +1,28 @@
 # AI Support QA Assistant
 
-基于 RAG 的客服知识库问答与客服质检系统。项目面向真实客服场景：把售后政策、物流规则、会员 FAQ 和质保说明构造成知识库，支持用户问题回答、引用溯源、客服对话质检和自动化评估。
+基于 RAG 的客服知识库问答与客服质检系统。项目面向真实客服场景：将售后政策、物流规则、账号 FAQ 和质保说明构造成知识库，支持用户问题回答、引用溯源、客服对话质检和自动化评估。
 
-这个项目适合写进 AI 工程师简历，因为它不仅是聊天页面，还包含检索增强生成、业务质检、结构化输出、评估指标和可演示页面。
+这个项目不是简单的 Chatbot，而是一个可演示、可评估、可扩展的 AI 工程项目，适合作为 AI 工程师简历项目展示。
 
-## 核心功能
+## Demo Screenshots
+
+### 知识库问答
+
+![Knowledge Base QA](docs/images/qa_demo.png)
+
+### 引用来源
+
+![Retrieved Sources](docs/images/sources_demo.png)
+
+### 客服质检
+
+![Quality Check](docs/images/quality_check_demo.png)
+
+### 自动化评估
+
+![Evaluation Report](docs/images/eval_report_demo.png)
+
+## Core Features
 
 - 知识库问答：根据本地 Markdown 知识库回答客户问题。
 - 引用溯源：展示 Top-K 检索片段、来源文档和相似度分数。
@@ -12,15 +30,16 @@
 - 自动化评估：统计关键词命中率、引用命中率、拒答准确率和平均延迟。
 - 低配置可运行：默认使用本地轻量检索，接入 LLM API 后可升级回答质量。
 
-## 技术栈
+## Tech Stack
 
 - Python
 - Streamlit
-- 本地向量检索 / RAG Pipeline
-- OpenAI-compatible LLM API，可接 DeepSeek、OpenAI、通义千问等兼容接口
-- JSON 测试集与自动评估报告
+- RAG Pipeline
+- Local vector-style retrieval fallback
+- OpenAI-compatible LLM API, compatible with DeepSeek, OpenAI, Qwen and other providers
+- JSON evaluation dataset
 
-## 项目结构
+## Project Structure
 
 ```text
 ai-support-qa-assistant/
@@ -39,11 +58,13 @@ ai-support-qa-assistant/
     knowledge_base/
     eval_questions.json
     sample_chats.json
+  docs/
+    images/
   tests/
   README.md
 ```
 
-## 快速启动
+## Quick Start
 
 ```bash
 python -m venv .venv
@@ -54,7 +75,13 @@ streamlit run app.py
 
 没有 API Key 也可以运行，系统会使用本地兜底模式完成演示。
 
-## 配置 LLM API
+如果国内网络安装依赖较慢，可以使用镜像源：
+
+```bash
+pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
+```
+
+## LLM API Config
 
 复制 `.env.example` 为 `.env`，填入兼容 OpenAI Chat Completions 格式的 API。
 
@@ -64,26 +91,26 @@ LLM_BASE_URL=https://api.deepseek.com/v1
 LLM_MODEL=deepseek-chat
 ```
 
-## RAG 流程
+## RAG Workflow
 
 ```text
-知识库文档
-  -> 文档切分
-  -> 本地向量化索引
-  -> 用户问题检索 Top-K
-  -> 构造上下文 Prompt
-  -> LLM 生成答案
-  -> 输出答案和引用来源
+Knowledge base documents
+  -> Chunking
+  -> Local retrieval index
+  -> Query Top-K relevant chunks
+  -> Build context prompt
+  -> LLM answer generation
+  -> Answer with cited sources
 ```
 
-## 评估指标
+## Evaluation Metrics
 
-- `keyword_match_rate`：回答是否命中预期关键词。
-- `source_hit_rate`：回答是否检索到知识库来源。
-- `refusal_accuracy`：无关问题是否正确拒答。
-- `avg_latency_ms`：平均响应延迟。
+- `keyword_match_rate`: whether the answer contains expected keywords.
+- `source_hit_rate`: whether the answer retrieves relevant knowledge sources.
+- `refusal_accuracy`: whether unrelated questions are refused correctly.
+- `avg_latency_ms`: average response latency.
 
-## 简历写法参考
+## Resume Bullets
 
 项目：AI Support QA Assistant - 基于 RAG 的客服质检与知识库问答系统
 
@@ -92,11 +119,12 @@ LLM_MODEL=deepseek-chat
 - 设计客服质检模块，自动识别客服回复中的事实错误、遗漏信息、语气问题和过度承诺，并输出结构化质检报告。
 - 构建评估集统计关键词命中率、引用命中率、拒答准确率和平均响应延迟，用于评估检索和生成质量。
 
-## 后续可升级方向
+## Roadmap
 
-- 将本地检索替换为 ChromaDB、FAISS 或 pgvector。
-- 增加 rerank 模块，提高长文档检索准确率。
-- 增加 FastAPI 后端和 React 前端。
-- 使用 Docker Compose 一键部署。
-- 接入日志系统，统计 token 成本、延迟和用户反馈。
+- Replace local retrieval with ChromaDB or FAISS semantic retrieval.
+- Add embedding model support for better semantic search.
+- Add reranking to improve long-document retrieval quality.
+- Add FastAPI backend and React frontend.
+- Add Docker Compose deployment.
+- Add observability for latency, token cost and user feedback.
 
