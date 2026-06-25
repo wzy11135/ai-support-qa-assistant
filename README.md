@@ -30,6 +30,7 @@
 - 自动化评估：统计关键词命中率、引用命中率、拒答准确率和平均延迟。
 - 真实 LLM 接入：支持 DeepSeek / OpenAI-compatible Chat Completions API。
 - 双检索后端：默认使用本地轻量检索，也支持可选 ChromaDB 检索后端。
+- Docker 部署：支持容器化运行，方便演示和部署。
 - 低配置可运行：没有 GPU、没有 API Key 也可以使用本地 fallback 完成核心演示。
 
 ## Tech Stack
@@ -40,6 +41,7 @@
 - DeepSeek Chat API / OpenAI-compatible API
 - Local retrieval fallback
 - Optional ChromaDB retrieval backend
+- Docker
 - JSON evaluation dataset
 
 ## Project Structure
@@ -65,7 +67,8 @@ ai-support-qa-assistant/
     sample_chats.json
   docs/
     images/
-  tests/
+    interview_notes.md
+  Dockerfile
   README.md
 ```
 
@@ -84,6 +87,19 @@ streamlit run app.py
 
 ```bash
 pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
+```
+
+## Docker Run
+
+```bash
+docker build -t ai-support-qa-assistant .
+docker run --rm -p 8501:8501 --env-file .env ai-support-qa-assistant
+```
+
+打开：
+
+```text
+http://localhost:8501
 ```
 
 ## LLM API Config
@@ -139,6 +155,16 @@ Knowledge base documents
 - `refusal_accuracy`: 无关问题是否正确拒答。
 - `avg_latency_ms`: 平均响应延迟。
 
+## Security
+
+- API Key 只通过本地 `.env` 注入。
+- `.env` 已加入 `.gitignore`，不会提交到 GitHub。
+- README 和截图不包含真实 API Key。
+
+## Interview Notes
+
+面试讲解稿见：[docs/interview_notes.md](docs/interview_notes.md)
+
 ## Resume Bullets
 
 项目：AI Support QA Assistant - 基于 RAG 的客服质检与知识库问答系统
@@ -147,7 +173,7 @@ Knowledge base documents
 - 实现 RAG 检索链路，包括文档加载、chunking、可选 ChromaDB 检索、Top-K 上下文召回和基于来源的回答生成，降低无依据回答风险。
 - 设计客服质检模块，自动识别客服回复中的事实错误、遗漏信息、语气问题和过度承诺，并输出结构化质检报告。
 - 构建评估集统计关键词命中率、引用命中率、拒答准确率和平均响应延迟，用于评估检索和生成质量。
-- 保留本地 fallback 机制，在 API 不可用时仍可完成核心流程演示，提高项目稳定性。
+- 支持 Docker 部署和本地 fallback 机制，提高项目可演示性与稳定性。
 
 ## Roadmap
 
